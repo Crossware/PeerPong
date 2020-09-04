@@ -2,23 +2,26 @@
  *  Stuff
  */
 
+import { Canvas } from "./canvas.js";
+
 const myself = new Peer(null, {
   debug: 2,
 });
 let myId;
 let connection;
+var asd = new Canvas();
 
-myself.on("open", function (id) {
-  console.log("My peer Id is: " + id);
-  myId = id;
-  console.log(myId);
-});
+// myself.on("open", function (id) {
+//   console.log("My peer Id is: " + id);
+//   myId = id;
+//   console.log(myId);
+// });
 
-myself.on("connection", function (playerConnection) {
-  connection = playerConnection;
-  console.log("Connected to: " + connection.peer);
-  listen();
-});
+// myself.on("connection", function (playerConnection) {
+//   connection = playerConnection;
+//   console.log("Connected to: " + connection.peer);
+//   listen();
+// });
 
 function listen() {
   connection.on("open", function () {
