@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel="stylesheet" href="main.css" />
+  </head>
   <body>
-    <h1>Banana</h1>
+    <h1 class="text">Banana</h1>
     <button type="button" onclick="getPlayerId();">Get Enemy Id</button>
     <button onclick="getMyId()">Get My Id</button>
     <div>
@@ -11,8 +14,11 @@
         Send message
       </button>
     </div>
+    <div class="center">
+      <canvas class="canvas" id="myCanvas" width="1200" height="800"> </canvas>
+    </div>
 
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
-    <script src="main.js"></script>
+    <script type="module" src="main.js"></script>
   </body>
 </html>
