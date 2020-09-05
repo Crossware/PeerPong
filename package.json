@@ -1,0 +1,33 @@
+{
+  "name": "P2Pong",
+  "version": "1.0.0",
+  "description": "This is my Peer 2 Peer Pong game.",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/preset-env": "^7.11.5",
+    "babel-jest": "^26.3.0",
+    "jest": "^26.4.2",
+    "jest-canvas-mock": "^2.2.0",
+    "prettier": "2.1.1"
+  },
+  "jest": {
+    "verbose": true,
+    "setupFiles": [
+      "jest-canvas-mock"
+    ]
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Crossware/Pong.git"
+  },
+  "author": "Cosmin S",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Crossware/Pong/issues"
+  },
+  "homepage": "https://github.com/Crossware/Pong#readme"
+}
