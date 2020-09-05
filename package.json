@@ -1,0 +1,23 @@
+{
+  "name": "P2Pong",
+  "version": "1.0.0",
+  "description": "This is my Peer 2 Peer Pong game.",
+  "main": "main.js",
+  "dependencies": {
+    "jest": "^26.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Crossware/Pong.git"
+  },
+  "author": "Cosmin S",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Crossware/Pong/issues"
+  },
+  "homepage": "https://github.com/Crossware/Pong#readme"
+}
