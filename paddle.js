@@ -14,7 +14,7 @@ export class Paddle {
     this.posX = posX;
     this.posY = posY;
     this.speed = speed;
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext('2d');
   }
 
   get posX() {
@@ -38,7 +38,7 @@ export class Paddle {
 
   draw() {
     this.ctx.beginPath();
-    this.ctx.fillStyle = "#eeeeee";
+    this.ctx.fillStyle = '#eeeeee';
     this.ctx.fillRect(this.posX, this.posY, 10, 100);
     this.ctx.stroke();
     this.ctx.closePath();
