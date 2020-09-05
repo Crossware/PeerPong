@@ -1,4 +1,4 @@
-import { Paddle } from '../paddle';
+import { Paddle } from '../classes/paddle';
 
 let canvas;
 let ctx;
