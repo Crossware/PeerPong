@@ -8,12 +8,14 @@ beforeEach(() => {
   ctx = canvas.getContext('2d');
 });
 
-describe('Draws', () => {
-  it('paddle', () => {
+describe('Paddle', () => {
+  it('should render', () => {
     var myPaddle = new Paddle(canvas, 10, 10, 0);
     myPaddle.draw();
 
+    expect(ctx.fillStyle).toBe('#eee');
     expect(ctx.fillRect).toHaveBeenCalledTimes(1);
     expect(ctx.fillRect).toHaveBeenCalledWith(10, 10, 10, 100);
+    expect(ctx.stroke).toHaveBeenCalledTimes(1);
   });
 });

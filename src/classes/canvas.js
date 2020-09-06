@@ -1,8 +1,18 @@
 import { Paddle } from './paddle.js';
 import { Ball } from './ball.js';
 
+window.addEventListener('keydown', function (e) {
+  keys[e.keyCode] = true;
+});
+
+window.addEventListener('keyup', function (e) {
+  delete keys[e.keyCode];
+});
+
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
+const speed = 5;
+const keys = [];
 
 export class Canvas {}
 
@@ -10,11 +20,6 @@ var myPaddle = new Paddle(canvas, 50, 350, 0);
 var enemyPaddle = new Paddle(canvas, 1140, 350, 0);
 
 var myBall = new Ball(canvas, 600, 400, 0);
-
-drawDivider();
-myBall.draw();
-myPaddle.draw();
-enemyPaddle.draw();
 
 function drawDivider() {
   var i;
@@ -44,3 +49,34 @@ function drawDivider() {
     posY = posY + height + spacer;
   }
 }
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawDivider();
+  myBall.draw();
+  myPaddle.draw();
+  enemyPaddle.draw();
+  moveMyPaddle();
+  requestAnimationFrame(animate);
+}
+animate();
+
+function moveMyPaddle() {
+  /* 38 up arrow, 87  W key */
+  if ((keys[38] || keys[87]) && myPaddle.posY > 0) {
+    console.log(myPaddle.posY);
+    myPaddle.posY -= speed;
+  }
+
+  /* 38 up arrow, 87  W key */
+  if ((keys[40] || keys[83]) && myPaddle.posY < 700) {
+    console.log(myPaddle.posY);
+    myPaddle.posY += speed;
+  }
+}
+
+function moveEnemyPaddle() {
+  enemyPaddle.posY = 0;
+}
+
+function getPallTrajectory() {}
