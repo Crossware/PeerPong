@@ -4,26 +4,27 @@
 
 import { Canvas } from './canvas.js';
 
+document.getElementById('enemyId').addEventListener('click', getEnemyId);
+document.getElementById('myId').addEventListener('click', getMyId);
+document.getElementById('sendMessage').addEventListener('click', sendMessage);
+
 const myself = new Peer(null, {
   debug: 2,
 });
 let myId;
 let connection;
-var asd = new Canvas();
 
-var move = false;
+myself.on('open', function (id) {
+  console.log('My peer Id is: ' + id);
+  myId = id;
+  console.log(myId);
+});
 
-// myself.on('open', function (id) {
-//   console.log('My peer Id is: ' + id);
-//   myId = id;
-//   console.log(myId);
-// });
-
-// myself.on('connection', function (playerConnection) {
-//   connection = playerConnection;
-//   console.log('Connected to: ' + connection.peer);
-//   listen();
-// });
+myself.on('connection', function (playerConnection) {
+  connection = playerConnection;
+  console.log('Connected to: ' + connection.peer);
+  listen();
+});
 
 function listen() {
   connection.on('open', function () {
@@ -40,9 +41,10 @@ function listen() {
   });
 }
 
-function getPlayerId() {
+function getEnemyId() {
   const url = window.location.href;
   const Id = url.split('?userId=')[1];
+  console.log(Id);
   return Id;
 }
 
@@ -53,12 +55,13 @@ function getMyId() {
   input.select();
   var result = document.execCommand('copy');
   document.body.removeChild(input);
+  console.log(myId);
   return result;
 }
 
 function sendMessage() {
   var inputField = document.getElementById('myInput');
-  var playerId = this.getPlayerId();
+  var playerId = getEnemyId();
   console.log(playerId);
   const connection = myself.connect(playerId, { reliable: true });
 
