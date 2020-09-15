@@ -7,17 +7,18 @@ import { Message } from './message.js';
 import { Paddle } from './paddle.js';
 import { Ball } from './ball.js';
 
-window.addEventListener('keydown', function (e) {
+window.addEventListener('keydown', (e) => {
   keys[e.keyCode] = true;
 });
 
-window.addEventListener('keyup', function (e) {
+window.addEventListener('keyup', (e) => {
   delete keys[e.keyCode];
 });
 
 document.getElementById('enemyId').addEventListener('click', getEnemyId);
 document.getElementById('myId').addEventListener('click', getMyId);
 document.getElementById('sendMessage').addEventListener('click', sendChat);
+document.getElementById('challengeUser').addEventListener('click', challengeUser);
 
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
@@ -34,6 +35,8 @@ let myId;
 let enemyId;
 let connection;
 let senderConnection;
+
+init();
 
 function drawDivider() {
   var i;
@@ -74,7 +77,6 @@ function animate() {
   //moveEnemyPaddle();
   requestAnimationFrame(animate);
 }
-animate();
 
 function moveMyPaddle() {
   /* 38 up arrow, 87  W key */
@@ -99,11 +101,6 @@ function moveMyPaddle() {
   //send(myMessage);
 }
 
-function moveEnemyPaddle(enemyPosY) {
-  console.log(enemyPosY);
-  //enemyPaddle.posY = enemyPosY;
-}
-
 function getPallTrajectory() {}
 
 myself.on('open', function (id) {
@@ -112,7 +109,7 @@ myself.on('open', function (id) {
   console.log(myId);
 });
 
-myself.on('connection', function (playerConnection) {
+myself.on('connection', (playerConnection) => {
   connection = playerConnection;
   console.log('Connected to: ' + connection.peer);
   enemyId = connection.peer;
@@ -121,7 +118,7 @@ myself.on('connection', function (playerConnection) {
 
 function listen() {
   connection.on('open', () => {
-    connection.on('data', function (data) {
+    connection.on('data', (data) => {
       var chatMessage = data.chat;
       var enemyPaddle = data.paddle;
       var ball = data.ball;
@@ -134,7 +131,7 @@ function listen() {
     });
   });
 
-  connection.on('close', function () {
+  connection.on('close', () => {
     console.log('Connection Lost');
     connection = null;
   });
@@ -161,13 +158,19 @@ function send(message) {
 }
 
 function getEnemyId() {
-  if (enemyId != null || enemyId != undefined) {
-    return enemyId;
-  }
   const url = window.location.href;
   const Id = url.split('?userId=')[1];
-  console.log(Id);
-  return Id;
+  var enemyIdInput = document.getElementById('enemyIdInput').value;
+
+  if (enemyId != null || enemyId != undefined) {
+    return enemyId;
+  } else if (enemyIdInput) {
+    console.log('Enemy Id from input: ' + enemyId);
+    return enemyIdInput;
+  } else {
+    console.log('Enemy Id from header: ' + Id);
+    return Id;
+  }
 }
 
 function getMyId() {
@@ -182,10 +185,32 @@ function getMyId() {
 }
 
 function sendChat() {
-  var inputField = document.getElementById('myInput');
+  var inputField = document.getElementById('textInput');
   var playerId = getEnemyId();
   console.log(playerId);
   console.log(inputField.value);
   var myMessage = new Message(null, null, inputField.value);
   send(myMessage);
+}
+
+function populateEnemyId() {
+  var enemyIdInput = document.getElementById('enemyIdInput');
+  var enemyIdFromHeader = getEnemyId();
+  enemyId = enemyIdFromHeader;
+  if (enemyId) {
+    enemyIdInput.value = enemyId;
+  }
+}
+
+function challengeUser() {
+  //TODO: Add error message if no user Id specified and success message when connected successfully
+  var playerId = getEnemyId();
+  if (senderConnection == null || senderConnection == undefined) {
+    senderConnection = myself.connect(playerId, { reliable: true });
+  }
+}
+
+function init() {
+  populateEnemyId();
+  animate();
 }
