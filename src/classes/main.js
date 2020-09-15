@@ -35,6 +35,8 @@ let enemyId;
 let connection;
 let senderConnection;
 
+init();
+
 function drawDivider() {
   var i;
   var posX = 595;
@@ -74,7 +76,6 @@ function animate() {
   //moveEnemyPaddle();
   requestAnimationFrame(animate);
 }
-animate();
 
 function moveMyPaddle() {
   /* 38 up arrow, 87  W key */
@@ -182,10 +183,23 @@ function getMyId() {
 }
 
 function sendChat() {
-  var inputField = document.getElementById('myInput');
+  var inputField = document.getElementById('textInput');
   var playerId = getEnemyId();
   console.log(playerId);
   console.log(inputField.value);
   var myMessage = new Message(null, null, inputField.value);
   send(myMessage);
+}
+
+function populateEnemyId() {
+  var enemyIdInput = document.getElementById('enemyIdInput');
+  console.log(enemyId);
+  if (enemyId) {
+    enemyIdInput.value = enemyId;
+  }
+}
+
+function init() {
+  populateEnemyId();
+  animate();
 }
