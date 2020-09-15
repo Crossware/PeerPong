@@ -7,11 +7,11 @@ import { Message } from './message.js';
 import { Paddle } from './paddle.js';
 import { Ball } from './ball.js';
 
-window.addEventListener('keydown', function (e) {
+window.addEventListener('keydown', (e) => {
   keys[e.keyCode] = true;
 });
 
-window.addEventListener('keyup', function (e) {
+window.addEventListener('keyup', (e) => {
   delete keys[e.keyCode];
 });
 
@@ -112,7 +112,7 @@ myself.on('open', function (id) {
   console.log(myId);
 });
 
-myself.on('connection', function (playerConnection) {
+myself.on('connection', (playerConnection) => {
   connection = playerConnection;
   console.log('Connected to: ' + connection.peer);
   enemyId = connection.peer;
@@ -121,7 +121,7 @@ myself.on('connection', function (playerConnection) {
 
 function listen() {
   connection.on('open', () => {
-    connection.on('data', function (data) {
+    connection.on('data', (data) => {
       var chatMessage = data.chat;
       var enemyPaddle = data.paddle;
       var ball = data.ball;
@@ -134,7 +134,7 @@ function listen() {
     });
   });
 
-  connection.on('close', function () {
+  connection.on('close', () => {
     console.log('Connection Lost');
     connection = null;
   });
