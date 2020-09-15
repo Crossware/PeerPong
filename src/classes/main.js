@@ -18,6 +18,7 @@ window.addEventListener('keyup', (e) => {
 document.getElementById('enemyId').addEventListener('click', getEnemyId);
 document.getElementById('myId').addEventListener('click', getMyId);
 document.getElementById('sendMessage').addEventListener('click', sendChat);
+document.getElementById('challengeUser').addEventListener('click', challengeUser);
 
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
@@ -100,11 +101,6 @@ function moveMyPaddle() {
   //send(myMessage);
 }
 
-function moveEnemyPaddle(enemyPosY) {
-  console.log(enemyPosY);
-  //enemyPaddle.posY = enemyPosY;
-}
-
 function getPallTrajectory() {}
 
 myself.on('open', function (id) {
@@ -162,13 +158,19 @@ function send(message) {
 }
 
 function getEnemyId() {
-  if (enemyId != null || enemyId != undefined) {
-    return enemyId;
-  }
   const url = window.location.href;
   const Id = url.split('?userId=')[1];
-  console.log(Id);
-  return Id;
+  var enemyIdInput = document.getElementById('enemyIdInput').value;
+
+  if (enemyId != null || enemyId != undefined) {
+    return enemyId;
+  } else if (enemyIdInput) {
+    console.log('Enemy Id from input: ' + enemyId);
+    return enemyIdInput;
+  } else {
+    console.log('Enemy Id from header: ' + Id);
+    return Id;
+  }
 }
 
 function getMyId() {
@@ -193,9 +195,18 @@ function sendChat() {
 
 function populateEnemyId() {
   var enemyIdInput = document.getElementById('enemyIdInput');
-  console.log(enemyId);
+  var enemyIdFromHeader = getEnemyId();
+  enemyId = enemyIdFromHeader;
   if (enemyId) {
     enemyIdInput.value = enemyId;
+  }
+}
+
+function challengeUser() {
+  //TODO: Add error message if no user Id specified and success message when connected successfully
+  var playerId = getEnemyId();
+  if (senderConnection == null || senderConnection == undefined) {
+    senderConnection = myself.connect(playerId, { reliable: true });
   }
 }
 
