@@ -29,6 +29,8 @@ var myBall = new Ball(canvas, 600, 400, 0);
 var myPaddle;
 var enemyPaddle;
 
+var startPlaying = false;
+
 const myself = new Peer(null, {
   debug: 2,
 });
@@ -69,12 +71,15 @@ function drawDivider() {
 }
 
 function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawDivider();
-  myBall.draw();
-  leftPaddle.draw();
-  rightPaddle.draw();
-  moveMyPaddle();
+  if (startPlaying) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawDivider();
+    myBall.draw();
+    leftPaddle.draw();
+    rightPaddle.draw();
+    moveMyPaddle();
+  }
+
   requestAnimationFrame(animate);
 }
 
@@ -110,6 +115,7 @@ myself.on('connection', (playerConnection) => {
   if (senderConnection == null || senderConnection == undefined) {
     myPaddle = rightPaddle;
     enemyPaddle = leftPaddle;
+    startPlaying = true;
   }
 
   connection = playerConnection;
@@ -198,6 +204,7 @@ function challengeUser() {
     if (connection == null || connection == undefined) {
       myPaddle = leftPaddle;
       enemyPaddle = rightPaddle;
+      startPlaying = true;
     }
   }
 }
