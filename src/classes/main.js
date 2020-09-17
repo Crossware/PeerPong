@@ -2,7 +2,6 @@
  *  Stuff
  */
 
-//import { Canvas, animate, enemyPaddle } from './canvas.js';
 import { Message } from './message.js';
 import { Paddle } from './paddle.js';
 import { Ball } from './ball.js';
@@ -74,7 +73,6 @@ function animate() {
   leftPaddle.draw();
   rightPaddle.draw();
   moveMyPaddle();
-  //moveEnemyPaddle();
   requestAnimationFrame(animate);
 }
 
@@ -96,9 +94,6 @@ function moveMyPaddle() {
     var myMessage = new Message(leftPaddle.posY, null, null);
     send(myMessage);
   }
-
-  //var myMessage = new Message(leftPaddle, null, null);
-  //send(myMessage);
 }
 
 function getPallTrajectory() {}
