@@ -26,6 +26,9 @@ const keys = [];
 var leftPaddle = new Paddle(canvas, 10, 350, 0);
 var rightPaddle = new Paddle(canvas, 1180, 350, 0);
 var myBall = new Ball(canvas, 600, 400, 0);
+var myPaddle;
+var enemyPaddle;
+var alreadyConnected = false;
 
 const myself = new Peer(null, {
   debug: 2,
@@ -78,20 +81,20 @@ function animate() {
 
 function moveMyPaddle() {
   /* 38 up arrow, 87  W key */
-  if ((keys[38] || keys[87]) && leftPaddle.posY > 0) {
-    console.log(leftPaddle.posY);
-    leftPaddle.posY -= speed;
+  if ((keys[38] || keys[87]) && myPaddle.posY > 0) {
+    console.log(myPaddle.posY);
+    myPaddle.posY -= speed;
 
-    var myMessage = new Message(leftPaddle.posY, null, null);
+    var myMessage = new Message(myPaddle.posY, null, null);
     send(myMessage);
   }
 
   /* 38 up arrow, 87  W key */
-  if ((keys[40] || keys[83]) && leftPaddle.posY < 700) {
-    console.log(leftPaddle.posY);
-    leftPaddle.posY += speed;
+  if ((keys[40] || keys[83]) && myPaddle.posY < 700) {
+    console.log(myPaddle.posY);
+    myPaddle.posY += speed;
 
-    var myMessage = new Message(leftPaddle.posY, null, null);
+    var myMessage = new Message(myPaddle.posY, null, null);
     send(myMessage);
   }
 }
@@ -105,8 +108,13 @@ myself.on('open', function (id) {
 });
 
 myself.on('connection', (playerConnection) => {
+  if (senderConnection == null || senderConnection == undefined) {
+    myPaddle = rightPaddle;
+    enemyPaddle = leftPaddle;
+  }
+
   connection = playerConnection;
-  console.log('Connected to: ' + connection.peer);
+  console.log('Successfully connected to: ' + connection.peer);
   enemyId = connection.peer;
   listen();
 });
@@ -115,10 +123,9 @@ function listen() {
   connection.on('open', () => {
     connection.on('data', (data) => {
       var chatMessage = data.chat;
-      var enemyPaddle = data.paddle;
       var ball = data.ball;
       if (data.paddle) {
-        rightPaddle.posY = data.paddle;
+        enemyPaddle.posY = data.paddle;
       }
       console.log(data);
       console.log('Data received');
@@ -133,10 +140,7 @@ function listen() {
 }
 
 function send(message) {
-  var playerId = getEnemyId();
-  if (senderConnection == null || senderConnection == undefined) {
-    senderConnection = myself.connect(playerId, { reliable: true });
-  }
+  challengeUser();
 
   // senderConnection.on('open', () => {
   //   // Receive messages
@@ -202,6 +206,10 @@ function challengeUser() {
   var playerId = getEnemyId();
   if (senderConnection == null || senderConnection == undefined) {
     senderConnection = myself.connect(playerId, { reliable: true });
+    if (connection == null || connection == undefined) {
+      myPaddle = leftPaddle;
+      enemyPaddle = rightPaddle;
+    }
   }
 }
 
