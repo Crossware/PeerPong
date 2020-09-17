@@ -28,7 +28,6 @@ var rightPaddle = new Paddle(canvas, 1180, 350, 0);
 var myBall = new Ball(canvas, 600, 400, 0);
 var myPaddle;
 var enemyPaddle;
-var alreadyConnected = false;
 
 const myself = new Peer(null, {
   debug: 2,
@@ -141,16 +140,6 @@ function listen() {
 
 function send(message) {
   challengeUser();
-
-  // senderConnection.on('open', () => {
-  //   // Receive messages
-  //   senderConnection.on('data', function (data) {
-  //     console.log('Received', data);
-  //   });
-
-  //   // Send messages
-  //   senderConnection.send(message);
-  // });
   console.log('Sending: ');
   console.log(message);
   senderConnection.send(message);
