@@ -5,4 +5,4 @@
 ### Icons by 
 <h1><a href="https://github.com/FortAwesome/Font-Awesome"><img src="https://img.fortawesome.com/349cfdf6/logo-fa-free.svg" alt="Font Awesome 5 Free" width="50%"></a></h1>
 
-### Score font "Press Start 2P" http://www.zone38.net/font/#pressstart 
+### Score font "Press Start 2P" courtesy of http://www.zone38.net/font/#pressstart 
