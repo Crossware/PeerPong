@@ -17,12 +17,6 @@ body {
   color: #eeeeee;
 }
 
-.score {
-  font-family: 'press_start_2pregular', Arial, sans-serif;
-  font-weight: normal;
-  font-style: normal;
-}
-
 @font-face {
   font-family: 'press_start_2pregular';
   src: url('pressstart2p-regular-webfont.woff2') format('woff2'),

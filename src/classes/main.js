@@ -5,6 +5,7 @@
 import { Message } from './message.js';
 import { Paddle } from './paddle.js';
 import { Ball } from './ball.js';
+import { Score } from './score.js';
 
 window.addEventListener('keydown', (e) => {
   keys[e.keyCode] = true;
@@ -28,6 +29,11 @@ var rightPaddle = new Paddle(canvas, 1180, 350, 10);
 var myBall = new Ball(canvas, 600, 400, 0);
 var myPaddle;
 var enemyPaddle;
+
+var leftScore = new Score(canvas, 250, 150, 50, 0);
+var rightScore = new Score(canvas, 850, 150, 50, 0);
+var myScore;
+var enemyScore;
 
 var startPlaying = false;
 var iAmHost = false;
@@ -78,6 +84,8 @@ function animate() {
   if (startPlaying) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawDivider();
+    leftScore.draw();
+    rightScore.draw();
     myBall.draw();
     leftPaddle.draw();
     rightPaddle.draw();
@@ -118,6 +126,8 @@ myself.on('open', function (id) {
 
 myself.on('connection', (playerConnection) => {
   if (senderConnection == null || senderConnection == undefined) {
+    myScore = rightScore;
+    enemyScore = leftScore;
     myPaddle = rightPaddle;
     enemyPaddle = leftPaddle;
     startPlaying = true;
@@ -207,6 +217,8 @@ function challengeUser() {
   if (senderConnection == null || senderConnection == undefined) {
     senderConnection = myself.connect(playerId, { reliable: true });
     if (connection == null || connection == undefined) {
+      myScore = leftScore;
+      enemyScore = rightScore;
       myPaddle = leftPaddle;
       enemyPaddle = rightPaddle;
       iAmHost = true;
@@ -277,12 +289,12 @@ function updateBallPos(ball) {
   //Left and right edges, add to the score and reset the ball
   if (newBallX < 0) {
     if (iAmHost) {
-      countScore(myPaddle, ball);
+      countScore(enemyScore, ball);
     }
     return;
   } else if (newBallX + myBall.diameter > canvasWidth - 1) {
     if (iAmHost) {
-      countScore(enemyPaddle, ball);
+      countScore(myScore, ball);
     }
     return;
   }
@@ -293,7 +305,8 @@ function updateBallPos(ball) {
   ball.posY = newBallY;
 }
 
-function countScore(paddle, ball) {
+function countScore(score, ball) {
+  score.text++;
   resetPaddles();
   resetBall(ball);
 }
