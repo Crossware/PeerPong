@@ -2,5 +2,5 @@
   "search.exclude": {
     "**/node_modules": true
   },
-  "svg.preview.background": "black"
+  "svg.preview.background": "white"
 }
