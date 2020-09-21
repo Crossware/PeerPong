@@ -77,28 +77,27 @@ function animate() {
     myBall.draw();
     leftPaddle.draw();
     rightPaddle.draw();
-    moveMyPaddle();
+    moveMyPaddle(myPaddle);
   }
 
   requestAnimationFrame(animate);
 }
 
-function moveMyPaddle() {
   /* 38 up arrow, 87  W key */
-  if ((keys[38] || keys[87]) && myPaddle.posY > 0) {
-    console.log(myPaddle.posY);
-    myPaddle.posY -= speed;
+  if ((keys[38] || keys[87]) && paddle.posY > 0) {
+    console.log(paddle.posY);
+    paddle.posY -= speed;
 
-    var myMessage = new Message(myPaddle.posY, null, null);
+    var myMessage = new Message(paddle.posY, null, null);
     send(myMessage);
   }
 
   /* 38 up arrow, 87  W key */
-  if ((keys[40] || keys[83]) && myPaddle.posY < 700) {
-    console.log(myPaddle.posY);
-    myPaddle.posY += speed;
+  if ((keys[40] || keys[83]) && paddle.posY < 700) {
+    console.log(paddle.posY);
+    paddle.posY += speed;
 
-    var myMessage = new Message(myPaddle.posY, null, null);
+    var myMessage = new Message(paddle.posY, null, null);
     send(myMessage);
   }
 }
