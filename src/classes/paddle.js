@@ -4,6 +4,10 @@
 
 export class Paddle {
   canvas;
+  width = 10;
+  height = 100;
+  initialPosX;
+  initialPosY;
   posX;
   posY;
   speed;
@@ -11,6 +15,8 @@ export class Paddle {
 
   constructor(canvas, posX, posY, speed) {
     this.canvas = canvas;
+    this.initialPosX = posX;
+    this.initialPosY = posY;
     this.posX = posX;
     this.posY = posY;
     this.speed = speed;
@@ -39,8 +45,13 @@ export class Paddle {
   draw() {
     this.ctx.beginPath();
     this.ctx.fillStyle = '#eeeeee';
-    this.ctx.fillRect(this.posX, this.posY, 10, 100);
+    this.ctx.fillRect(this.posX, this.posY, this.width, this.height);
     this.ctx.stroke();
     this.ctx.closePath();
+  }
+
+  reset() {
+    this.posX = this.initialPosX;
+    this.posY = this.initialPosY;
   }
 }
