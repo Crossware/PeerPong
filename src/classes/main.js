@@ -26,7 +26,7 @@ const speed = 5;
 const keys = [];
 var leftPaddle = new Paddle(canvas, 10, 350, 10);
 var rightPaddle = new Paddle(canvas, 1180, 350, 10);
-var myBall = new Ball(canvas, 600, 400, 0);
+var myBall = new Ball(canvas, 600, 400, 5);
 var myPaddle;
 var enemyPaddle;
 
@@ -242,10 +242,11 @@ function updateHostBallPosition(ball) {
   if (!iAmHost) {
     return;
   }
-  var newBallX = ball.posX + ball.velocityX * speed;
-  var newBallY = ball.posY + ball.velocityY * speed;
+  var newBallX = ball.posX + ball.velocityX * ball.speed;
+  var newBallY = ball.posY + ball.velocityY * ball.speed;
   var paddleOffset = 10; // distance between paddle and back wall
-  var maxBounceAngle = Math.PI / 12;
+
+  var intersectX, intersectY;
 
   //Top and bottom edges, simply bounce
   if (newBallY < 0) {
@@ -256,28 +257,21 @@ function updateHostBallPosition(ball) {
     ball.velocityY = -ball.velocityY;
   }
 
-  var intersectX, intersectY, relativeIntersectY, bounceAngle, ballSpeed, ballTravelLeft;
-
-  //Left paddle
+  //Left paddle collisions
   if (newBallX < paddleOffset + myPaddle.width && ball.posX >= paddleOffset + myPaddle.width) {
     intersectX = paddleOffset + myPaddle.width;
     intersectY =
-      ball.posY -
-      ((ball.posX - (paddleOffset + myPaddle.width)) * (ball.posY - newBallY)) /
-        (ball.posX - newBallX);
+      ball.posY - ((ball.posX - (paddleOffset + myPaddle.width)) * (ball.posY - newBallY)) / (ball.posX - newBallX);
     if (intersectY >= myPaddle.posY && intersectY <= myPaddle.posY + myPaddle.height) {
-      relativeIntersectY = myPaddle.posY + myPaddle.height / 2 - intersectY;
-      bounceAngle = (relativeIntersectY / (myPaddle.height / 2)) * (Math.PI / 2 - maxBounceAngle);
-      ballSpeed = Math.sqrt(ball.velocityY * ball.velocityY + ball.velocityY * ball.velocityY);
-      ballTravelLeft = (newBallY - intersectY) / (newBallY - ball.posY);
-      ball.velocityX = ballSpeed * Math.cos(bounceAngle);
-      ball.velocityY = ballSpeed * Math.sin(bounceAngle) * -1;
-      newBallX = intersectX + ballTravelLeft * ballSpeed * Math.cos(bounceAngle);
-      newBallY = intersectY + ballTravelLeft * ballSpeed * Math.sin(bounceAngle);
+      var angle = calculateAngle(enemyPaddle, ball);
+      var ballSpeed = Math.sqrt(ball.velocityY * ball.velocityY + ball.velocityY * ball.velocityY);
+      ball.velocityX = ballSpeed * Math.cos(angle);
+      ball.velocityY = ballSpeed * Math.sin(angle);
+      ball.speed += 0.2;
     }
   }
 
-  //Right paddle
+  //Right paddle collision
   if (
     newBallX > canvasWidth - paddleOffset - enemyPaddle.width &&
     ball.posX <= canvasWidth - paddleOffset - enemyPaddle.width
@@ -288,15 +282,11 @@ function updateHostBallPosition(ball) {
       ((ball.posX - (canvasWidth - paddleOffset - enemyPaddle.width)) * (ball.posY - newBallY)) /
         (ball.posX - newBallX);
     if (intersectY >= enemyPaddle.posY && intersectY <= enemyPaddle.posY + enemyPaddle.height) {
-      relativeIntersectY = enemyPaddle.posY + enemyPaddle.height / 2 - intersectY;
-      bounceAngle =
-        (relativeIntersectY / (enemyPaddle.height / 2)) * (Math.PI / 2 - maxBounceAngle);
-      ballSpeed = Math.sqrt(ball.velocityX * ball.velocityX + ball.velocityY * ball.velocityY);
-      ballTravelLeft = (newBallY - intersectY) / (newBallY - ball.posY);
-      ball.velocityX = ballSpeed * Math.cos(bounceAngle) * -1;
-      ball.velocityY = ballSpeed * Math.sin(bounceAngle) * -1;
-      newBallX = intersectX - ballTravelLeft * ballSpeed * Math.cos(bounceAngle);
-      newBallY = intersectY - ballTravelLeft * ballSpeed * Math.sin(bounceAngle);
+      var angle = calculateAngle(enemyPaddle, ball);
+      var ballSpeed = Math.sqrt(ball.velocityX * ball.velocityX + ball.velocityY * ball.velocityY);
+      ball.velocityX = -1 * ballSpeed * Math.cos(angle);
+      ball.velocityY = ballSpeed * Math.sin(angle);
+      ball.speed += 0.2;
     }
   }
 
@@ -313,10 +303,24 @@ function updateHostBallPosition(ball) {
     return;
   }
 
-  var myMessage = new Message(null, newBallX, newBallY, null);
+  var myMessage = new Message(null, ball.posX, ball.posY, null);
   send(myMessage);
   ball.posX = newBallX;
   ball.posY = newBallY;
+}
+
+function calculateAngle(paddle, ball) {
+  let angle = 0;
+  //Top of paddle
+  if (ball.posY < paddle.posY + paddle.height / 2) {
+    // then -1 * Math.PI / 4 = -45deg
+    angle = (-1 * Math.PI) / 4;
+    //Bottom of paddle
+  } else if (ball.posY > paddle.posY + paddle.height / 2) {
+    // then angle will be Math.PI / 4 = 45deg
+    angle = Math.PI / 4;
+  }
+  return angle;
 }
 
 function countScore(score, ball) {
