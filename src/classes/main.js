@@ -89,14 +89,14 @@ function animate() {
     myBall.draw();
     leftPaddle.draw();
     rightPaddle.draw();
-    moveMyPaddle(myPaddle);
-    updateBallPos(myBall);
+    updateHostPaddle(myPaddle);
+    updateHostBallPosition(myBall);
   }
 
   requestAnimationFrame(animate);
 }
 
-function moveMyPaddle(paddle) {
+function updateHostPaddle(paddle) {
   /* 38 up arrow, 87  W key */
   if ((keys[38] || keys[87]) && paddle.posY > 0) {
     console.log(paddle.posY);
@@ -115,8 +115,6 @@ function moveMyPaddle(paddle) {
     send(myMessage);
   }
 }
-
-function getPallTrajectory() {}
 
 myself.on('open', function (id) {
   console.log('My peer Id is: ' + id);
@@ -141,14 +139,14 @@ myself.on('connection', (playerConnection) => {
 
 function listen() {
   connection.on('open', () => {
-    connection.on('data', (data) => {
-      var chatMessage = data.chat;
-      var ball = data.ball;
-      if (data.paddle) {
-        enemyPaddle.posY = data.paddle;
-      }
-      console.log(data);
-      console.log('Data received');
+    connection.on('data', (message) => {
+      var chatMessage = message.chat;
+      updateEnemyPaddlePosition(message);
+      updateEnemyBallPosition(message);
+      resetEnemyPaddles(message);
+      updateEnemyScoreFromMessage(message);
+      console.log(message);
+      console.log('Data received: ');
       connection.send('Connection Established');
     });
   });
@@ -163,7 +161,7 @@ function send(message) {
   challengeUser();
   console.log('Sending: ');
   console.log(message);
-  //senderConnection.send(message);
+  senderConnection.send(message);
 }
 
 function getEnemyId() {
@@ -227,7 +225,23 @@ function challengeUser() {
   }
 }
 
-function updateBallPos(ball) {
+function updateEnemyPaddlePosition(message) {
+  if (message.paddlePosY) {
+    enemyPaddle.posY = message.paddlePosY;
+  }
+}
+
+function updateEnemyBallPosition(message) {
+  if (!iAmHost) {
+    myBall.posX = message.ballPosX;
+    myBall.posY = message.ballPosY;
+  }
+}
+
+function updateHostBallPosition(ball) {
+  if (!iAmHost) {
+    return;
+  }
   var newBallX = ball.posX + ball.velocityX * speed;
   var newBallY = ball.posY + ball.velocityY * speed;
   var paddleOffset = 10; // distance between paddle and back wall
@@ -257,7 +271,7 @@ function updateBallPos(ball) {
       ballSpeed = Math.sqrt(ball.velocityY * ball.velocityY + ball.velocityY * ball.velocityY);
       ballTravelLeft = (newBallY - intersectY) / (newBallY - ball.posY);
       ball.velocityX = ballSpeed * Math.cos(bounceAngle);
-      ball.velocityY = ballSpeed * -Math.sin(bounceAngle);
+      ball.velocityY = ballSpeed * Math.sin(bounceAngle) * -1;
       newBallX = intersectX + ballTravelLeft * ballSpeed * Math.cos(bounceAngle);
       newBallY = intersectY + ballTravelLeft * ballSpeed * Math.sin(bounceAngle);
     }
@@ -288,32 +302,64 @@ function updateBallPos(ball) {
 
   //Left and right edges, add to the score and reset the ball
   if (newBallX < 0) {
-    if (iAmHost) {
-      countScore(enemyScore, ball);
-    }
+    updateEnemyScore();
+    resetHostPaddles();
+    resetBall(ball);
     return;
   } else if (newBallX + myBall.diameter > canvasWidth - 1) {
-    if (iAmHost) {
-      countScore(myScore, ball);
-    }
+    updateHostScore();
+    resetHostPaddles();
+    resetBall(ball);
     return;
   }
 
-  var myMessage = new Message(null, ball, null);
+  var myMessage = new Message(null, newBallX, newBallY, null);
   send(myMessage);
   ball.posX = newBallX;
   ball.posY = newBallY;
 }
 
 function countScore(score, ball) {
-  score.text++;
-  resetPaddles();
+  updateHostScore();
+  resetHostPaddles();
   resetBall(ball);
 }
 
-function resetPaddles() {
+function updateHostScore() {
+  myScore.text++;
+
+  send(new Message(null, null, null, null, null, myScore.text));
+}
+
+function updateEnemyScoreFromMessage(message) {
+  if (message.hostScore) {
+    enemyScore.text = message.hostScore;
+  }
+
+  if (message.enemyScore) {
+    myScore.text = message.enemyScore;
+  }
+}
+
+function updateEnemyScore() {
+  enemyScore.text++;
+
+  send(new Message(null, null, null, null, null, null, enemyScore.text));
+}
+
+function resetHostPaddles() {
   myPaddle.reset();
   enemyPaddle.reset();
+
+  var myMessage = new Message(null, null, null, null, true);
+  send(myMessage);
+}
+
+function resetEnemyPaddles(message) {
+  if (message.paddleReset) {
+    myPaddle.reset();
+    enemyPaddle.reset();
+  }
 }
 
 function resetBall(ball) {
