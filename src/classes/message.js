@@ -3,13 +3,21 @@
  */
 
 export class Message {
-  paddle;
-  ball;
+  paddlePosY;
+  ballPosX;
+  ballPosY;
   chat;
+  paddleReset;
+  hostScore;
+  enemyScore;
 
-  constructor(paddle, ball, chat) {
-    this.paddle = paddle;
-    this.ball = ball;
+  constructor(paddlePosY, ballPosX, ballPosY, chat, paddleReset, hostScore, enemyScore) {
+    this.paddlePosY = paddlePosY;
+    this.ballPosX = ballPosX;
+    this.ballPosY = ballPosY;
     this.chat = chat;
+    this.paddleReset = paddleReset;
+    this.hostScore = hostScore;
+    this.enemyScore = enemyScore;
   }
 }

@@ -26,7 +26,7 @@ const speed = 5;
 const keys = [];
 var leftPaddle = new Paddle(canvas, 10, 350, 10);
 var rightPaddle = new Paddle(canvas, 1180, 350, 10);
-var myBall = new Ball(canvas, 600, 400, 0);
+var myBall = new Ball(canvas, 600, 400, 5);
 var myPaddle;
 var enemyPaddle;
 
@@ -89,14 +89,14 @@ function animate() {
     myBall.draw();
     leftPaddle.draw();
     rightPaddle.draw();
-    moveMyPaddle(myPaddle);
-    updateBallPos(myBall);
+    updateHostPaddle(myPaddle);
+    updateHostBallPosition(myBall);
   }
 
   requestAnimationFrame(animate);
 }
 
-function moveMyPaddle(paddle) {
+function updateHostPaddle(paddle) {
   /* 38 up arrow, 87  W key */
   if ((keys[38] || keys[87]) && paddle.posY > 0) {
     console.log(paddle.posY);
@@ -115,8 +115,6 @@ function moveMyPaddle(paddle) {
     send(myMessage);
   }
 }
-
-function getPallTrajectory() {}
 
 myself.on('open', function (id) {
   console.log('My peer Id is: ' + id);
@@ -141,14 +139,14 @@ myself.on('connection', (playerConnection) => {
 
 function listen() {
   connection.on('open', () => {
-    connection.on('data', (data) => {
-      var chatMessage = data.chat;
-      var ball = data.ball;
-      if (data.paddle) {
-        enemyPaddle.posY = data.paddle;
-      }
-      console.log(data);
-      console.log('Data received');
+    connection.on('data', (message) => {
+      var chatMessage = message.chat;
+      updateEnemyPaddlePosition(message);
+      updateEnemyBallPosition(message);
+      resetEnemyPaddles(message);
+      updateEnemyScoreFromMessage(message);
+      console.log(message);
+      console.log('Data received: ');
       connection.send('Connection Established');
     });
   });
@@ -163,7 +161,7 @@ function send(message) {
   challengeUser();
   console.log('Sending: ');
   console.log(message);
-  //senderConnection.send(message);
+  senderConnection.send(message);
 }
 
 function getEnemyId() {
@@ -227,11 +225,28 @@ function challengeUser() {
   }
 }
 
-function updateBallPos(ball) {
-  var newBallX = ball.posX + ball.velocityX * speed;
-  var newBallY = ball.posY + ball.velocityY * speed;
+function updateEnemyPaddlePosition(message) {
+  if (message.paddlePosY) {
+    enemyPaddle.posY = message.paddlePosY;
+  }
+}
+
+function updateEnemyBallPosition(message) {
+  if (!iAmHost) {
+    myBall.posX = message.ballPosX;
+    myBall.posY = message.ballPosY;
+  }
+}
+
+function updateHostBallPosition(ball) {
+  if (!iAmHost) {
+    return;
+  }
+  var newBallX = ball.posX + ball.velocityX * ball.speed;
+  var newBallY = ball.posY + ball.velocityY * ball.speed;
   var paddleOffset = 10; // distance between paddle and back wall
-  var maxBounceAngle = Math.PI / 12;
+
+  var intersectX, intersectY;
 
   //Top and bottom edges, simply bounce
   if (newBallY < 0) {
@@ -242,28 +257,21 @@ function updateBallPos(ball) {
     ball.velocityY = -ball.velocityY;
   }
 
-  var intersectX, intersectY, relativeIntersectY, bounceAngle, ballSpeed, ballTravelLeft;
-
-  //Left paddle
+  //Left paddle collisions
   if (newBallX < paddleOffset + myPaddle.width && ball.posX >= paddleOffset + myPaddle.width) {
     intersectX = paddleOffset + myPaddle.width;
     intersectY =
-      ball.posY -
-      ((ball.posX - (paddleOffset + myPaddle.width)) * (ball.posY - newBallY)) /
-        (ball.posX - newBallX);
+      ball.posY - ((ball.posX - (paddleOffset + myPaddle.width)) * (ball.posY - newBallY)) / (ball.posX - newBallX);
     if (intersectY >= myPaddle.posY && intersectY <= myPaddle.posY + myPaddle.height) {
-      relativeIntersectY = myPaddle.posY + myPaddle.height / 2 - intersectY;
-      bounceAngle = (relativeIntersectY / (myPaddle.height / 2)) * (Math.PI / 2 - maxBounceAngle);
-      ballSpeed = Math.sqrt(ball.velocityY * ball.velocityY + ball.velocityY * ball.velocityY);
-      ballTravelLeft = (newBallY - intersectY) / (newBallY - ball.posY);
-      ball.velocityX = ballSpeed * Math.cos(bounceAngle);
-      ball.velocityY = ballSpeed * -Math.sin(bounceAngle);
-      newBallX = intersectX + ballTravelLeft * ballSpeed * Math.cos(bounceAngle);
-      newBallY = intersectY + ballTravelLeft * ballSpeed * Math.sin(bounceAngle);
+      var angle = calculateAngle(enemyPaddle, ball);
+      var ballSpeed = Math.sqrt(ball.velocityY * ball.velocityY + ball.velocityY * ball.velocityY);
+      ball.velocityX = ballSpeed * Math.cos(angle);
+      ball.velocityY = ballSpeed * Math.sin(angle);
+      ball.speed += 0.2;
     }
   }
 
-  //Right paddle
+  //Right paddle collision
   if (
     newBallX > canvasWidth - paddleOffset - enemyPaddle.width &&
     ball.posX <= canvasWidth - paddleOffset - enemyPaddle.width
@@ -274,46 +282,88 @@ function updateBallPos(ball) {
       ((ball.posX - (canvasWidth - paddleOffset - enemyPaddle.width)) * (ball.posY - newBallY)) /
         (ball.posX - newBallX);
     if (intersectY >= enemyPaddle.posY && intersectY <= enemyPaddle.posY + enemyPaddle.height) {
-      relativeIntersectY = enemyPaddle.posY + enemyPaddle.height / 2 - intersectY;
-      bounceAngle =
-        (relativeIntersectY / (enemyPaddle.height / 2)) * (Math.PI / 2 - maxBounceAngle);
-      ballSpeed = Math.sqrt(ball.velocityX * ball.velocityX + ball.velocityY * ball.velocityY);
-      ballTravelLeft = (newBallY - intersectY) / (newBallY - ball.posY);
-      ball.velocityX = ballSpeed * Math.cos(bounceAngle) * -1;
-      ball.velocityY = ballSpeed * Math.sin(bounceAngle) * -1;
-      newBallX = intersectX - ballTravelLeft * ballSpeed * Math.cos(bounceAngle);
-      newBallY = intersectY - ballTravelLeft * ballSpeed * Math.sin(bounceAngle);
+      var angle = calculateAngle(enemyPaddle, ball);
+      var ballSpeed = Math.sqrt(ball.velocityX * ball.velocityX + ball.velocityY * ball.velocityY);
+      ball.velocityX = -1 * ballSpeed * Math.cos(angle);
+      ball.velocityY = ballSpeed * Math.sin(angle);
+      ball.speed += 0.2;
     }
   }
 
   //Left and right edges, add to the score and reset the ball
   if (newBallX < 0) {
-    if (iAmHost) {
-      countScore(enemyScore, ball);
-    }
+    updateEnemyScore();
+    resetHostPaddles();
+    resetBall(ball);
     return;
   } else if (newBallX + myBall.diameter > canvasWidth - 1) {
-    if (iAmHost) {
-      countScore(myScore, ball);
-    }
+    updateHostScore();
+    resetHostPaddles();
+    resetBall(ball);
     return;
   }
 
-  var myMessage = new Message(null, ball, null);
+  var myMessage = new Message(null, ball.posX, ball.posY, null);
   send(myMessage);
   ball.posX = newBallX;
   ball.posY = newBallY;
 }
 
+function calculateAngle(paddle, ball) {
+  let angle = 0;
+  //Top of paddle
+  if (ball.posY < paddle.posY + paddle.height / 2) {
+    // then -1 * Math.PI / 4 = -45deg
+    angle = (-1 * Math.PI) / 4;
+    //Bottom of paddle
+  } else if (ball.posY > paddle.posY + paddle.height / 2) {
+    // then angle will be Math.PI / 4 = 45deg
+    angle = Math.PI / 4;
+  }
+  return angle;
+}
+
 function countScore(score, ball) {
-  score.text++;
-  resetPaddles();
+  updateHostScore();
+  resetHostPaddles();
   resetBall(ball);
 }
 
-function resetPaddles() {
+function updateHostScore() {
+  myScore.text++;
+
+  send(new Message(null, null, null, null, null, myScore.text));
+}
+
+function updateEnemyScoreFromMessage(message) {
+  if (message.hostScore) {
+    enemyScore.text = message.hostScore;
+  }
+
+  if (message.enemyScore) {
+    myScore.text = message.enemyScore;
+  }
+}
+
+function updateEnemyScore() {
+  enemyScore.text++;
+
+  send(new Message(null, null, null, null, null, null, enemyScore.text));
+}
+
+function resetHostPaddles() {
   myPaddle.reset();
   enemyPaddle.reset();
+
+  var myMessage = new Message(null, null, null, null, true);
+  send(myMessage);
+}
+
+function resetEnemyPaddles(message) {
+  if (message.paddleReset) {
+    myPaddle.reset();
+    enemyPaddle.reset();
+  }
 }
 
 function resetBall(ball) {
