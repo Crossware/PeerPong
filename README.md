@@ -8,7 +8,7 @@ I had randomly sumbled upon Peerjs while looking for ideas for javascript projec
 
 <b>This repo uses <a href="https://www.netlify.com/" alt="issues">Netlify</a> for hosting with a merge action on master.</b>
  
-### Contributing 
+## Contributing 
 Contribuition is more than welcome and hopefully easy to do:
 Simply copy the following repo url into your desired git client 
 ``` https://github.com/Crossware/PeerPong.git ```
@@ -32,7 +32,7 @@ If you want to send a text message to the _enemy_ simply input your message in t
 And that about covers it now, head over to https://peerpong.netlify.app/ to start playing.
 
 
-### External resources used: 
+## External resources used: 
 #### Icons by 
 <h1><a href="https://github.com/FortAwesome/Font-Awesome"><img src="https://img.fortawesome.com/349cfdf6/logo-fa-free.svg" alt="Font Awesome 5 Free" width="50%"></a></h1>
 
