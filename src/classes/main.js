@@ -323,12 +323,6 @@ function calculateAngle(paddle, ball) {
   return angle;
 }
 
-function countScore(score, ball) {
-  updateHostScore();
-  resetHostPaddles();
-  resetBall(ball);
-}
-
 function updateHostScore() {
   myScore.text++;
 
