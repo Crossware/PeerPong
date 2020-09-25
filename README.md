@@ -21,10 +21,9 @@ Once you've got all the code run ``` npm i ``` into your terminal to install all
 <b>Keep an eye out the <a href="https://github.com/Crossware/PeerPong/issues" alt="issues">issues</a> tab for new items that can be worked on!</b>
 
 ### Gameplay instructions
-So you wanna play the game huh, well you're in the right place.
-Since it's a simple pong game at it's core, to play simply use:
+So you wanna play the game huh, well you're in the right place, since it's a simple pong game at it's core to play simply use:
 <ul>
-<li>USE W/D or Arrow Up/Down keys to move the paddle</li>
+<li>USE W/S or Arrow Up/Down keys to move the paddle</li>
 </ul>
 
 In order to play against another player ask them for their id and imput it in the userId box on the ui and click "Challenge User", challenging someone makes you the "host" and your paddle will be on the left side while the enemy paddle will be on the right side.
