@@ -37,6 +37,7 @@ And that about covers it now, head over to https://peerpong.netlify.app/ to star
 
 
 ## External resources used: 
+#### Awesome free hosting with merge deploys from repo to website using <a href="https://www.netlify.com/" alt="issues">Netlify</a>
 #### Icons by 
 <h1><a href="https://github.com/FortAwesome/Font-Awesome"><img src="https://img.fortawesome.com/349cfdf6/logo-fa-free.svg" alt="Font Awesome 5 Free" width="50%"></a></h1>
 
