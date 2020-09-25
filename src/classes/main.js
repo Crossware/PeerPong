@@ -261,7 +261,9 @@ function updateHostBallPosition(ball) {
   if (newBallX < paddleOffset + myPaddle.width && ball.posX >= paddleOffset + myPaddle.width) {
     intersectX = paddleOffset + myPaddle.width;
     intersectY =
-      ball.posY - ((ball.posX - (paddleOffset + myPaddle.width)) * (ball.posY - newBallY)) / (ball.posX - newBallX);
+      ball.posY -
+      ((ball.posX - (paddleOffset + myPaddle.width)) * (ball.posY - newBallY)) /
+        (ball.posX - newBallX);
     if (intersectY >= myPaddle.posY && intersectY <= myPaddle.posY + myPaddle.height) {
       var angle = calculateAngle(enemyPaddle, ball);
       var ballSpeed = Math.sqrt(ball.velocityY * ball.velocityY + ball.velocityY * ball.velocityY);
