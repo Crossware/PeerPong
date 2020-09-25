@@ -10,6 +10,7 @@ I had randomly sumbled upon Peerjs while looking for ideas for javascript projec
  
 ## Contributing 
 Contribuition is more than welcome and hopefully easy to do:
+
 Simply copy the following repo url into your desired git client 
 ``` https://github.com/Crossware/PeerPong.git ```
 
