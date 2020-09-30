@@ -3,13 +3,13 @@
  */
 
 export default class Message {
-  paddlePosY;
-  ballPosX;
-  ballPosY;
-  chat;
-  paddleReset;
-  hostScore;
-  enemyScore;
+  private paddlePosY: number;
+  private ballPosX: number;
+  private ballPosY: number;
+  private chat: number;
+  private paddleReset: number;
+  private hostScore: number;
+  private enemyScore: number;
 
   constructor(
     paddlePosY = null,
