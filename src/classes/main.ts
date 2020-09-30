@@ -234,8 +234,8 @@ function updateEnemyPaddlePosition(message) {
 
 function updateEnemyBallPosition(message) {
   if (!iAmHost) {
-    myBall.posX = message.ballPosX;
-    myBall.posY = message.ballPosY;
+    myBall.setPosX(message.ballPosX);
+    myBall.setPosY(message.ballPosY);
   }
 }
 
@@ -299,7 +299,7 @@ function updateHostBallPosition(ball) {
     resetHostPaddles();
     resetBall(ball);
     return;
-  } else if (newBallX + myBall.diameter > canvasWidth - 1) {
+  } else if (newBallX + myBall.getDiameter() > canvasWidth - 1) {
     updateHostScore();
     resetHostPaddles();
     resetBall(ball);
