@@ -1,5 +1,5 @@
 {
-  "name": "P2Pong",
+  "name": "PeerPong",
   "version": "1.0.0",
   "description": "This is my Peer 2 Peer Pong game.",
   "main": "main.js",
@@ -13,6 +13,7 @@
     "babel-jest": "^26.3.0",
     "jest": "^26.4.2",
     "jest-canvas-mock": "^2.2.0",
+    "live-server": "^1.2.1",
     "prettier": "2.1.1",
     "ts-jest": "^26.4.1",
     "ts-loader": "^8.0.4",
@@ -29,7 +30,9 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "webpack"
+    "launch": "npm run build && npm run open",
+    "build": "webpack",
+    "open": "live-server"
   },
   "repository": {
     "type": "git",
