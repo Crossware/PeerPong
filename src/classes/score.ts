@@ -3,14 +3,14 @@
  */
 
 export class Score {
-  posX;
-  posY;
-  size = 10;
-  canvas;
-  text;
-  ctx;
+  private posX: number;
+  private posY: number;
+  private size: number = 10;
+  private canvas: HTMLCanvasElement;
+  private text: string;
+  private ctx: CanvasRenderingContext2D;
 
-  constructor(canvas, posX, posY, size, text) {
+  constructor(canvas: HTMLCanvasElement, posX: number, posY: number, size: number, text: string) {
     this.canvas = canvas;
     this.posX = posX;
     this.posY = posY;

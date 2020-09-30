@@ -30,8 +30,8 @@ var myBall = new Ball(canvas, 600, 400, 5);
 var myPaddle;
 var enemyPaddle;
 
-var leftScore = new Score(canvas, 250, 150, 50, 0);
-var rightScore = new Score(canvas, 850, 150, 50, 0);
+var leftScore = new Score(canvas, 250, 150, 50, '0');
+var rightScore = new Score(canvas, 850, 150, 50, '0');
 var myScore;
 var enemyScore;
 
