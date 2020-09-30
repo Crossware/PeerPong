@@ -196,7 +196,7 @@ function sendChat() {
   var playerId = getEnemyId();
   console.log(playerId);
   console.log(inputField.value);
-  var myMessage = new Message(null, null, inputField.value);
+  var myMessage = new Message(null, null, null, inputField.value);
   send(myMessage);
 }
 
