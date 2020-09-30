@@ -47,6 +47,18 @@ export default class Paddle {
     this._speed = speed;
   }
 
+  public moveUp(): void {
+    this.moveBy(-this._speed);
+  }
+
+  public moveDown(): void {
+    this.moveBy(this._speed);
+  }
+
+  private moveBy(amount: number): void {
+    this._posY += amount;
+  }
+
   public draw() {
     this.ctx.beginPath();
     this.ctx.fillStyle = '#eeeeee';

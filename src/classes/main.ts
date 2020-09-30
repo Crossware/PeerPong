@@ -7,6 +7,7 @@ import Paddle from './Paddle';
 import Ball from './Ball';
 import Score from './Score';
 import Peer from 'peerjs';
+
 window.addEventListener('keydown', (e) => {
   keys[e.keyCode] = true;
 });
@@ -22,10 +23,13 @@ document.getElementById('challengeUser').addEventListener('click', challengeUser
 
 var canvas: any = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
+
 const speed = 5;
 const keys = [];
+
 var leftPaddle = new Paddle(canvas, 10, 350, 10);
 var rightPaddle = new Paddle(canvas, 1180, 350, 10);
+
 var myBall = new Ball(canvas, 600, 400, 5);
 var myPaddle;
 var enemyPaddle;
@@ -96,23 +100,17 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-function updateHostPaddle(paddle) {
-  /* 38 up arrow, 87  W key */
-  if ((keys[38] || keys[87]) && paddle.posY > 0) {
+function updateHostPaddle(paddle: Paddle) {
+  const upKeyPressed = (keys[38] || keys[87]) && paddle.posY > 0;
+  const downKeyPressed = (keys[40] || keys[83]) && paddle.posY < 700;
+  const keyPressed = upKeyPressed || downKeyPressed;
+
+  if (upKeyPressed) paddle.moveUp();
+  if (downKeyPressed) paddle.moveDown();
+
+  if (keyPressed) {
     console.log(paddle.posY);
-    paddle.posY -= paddle.speed;
-
-    var myMessage = new Message(paddle.posY, null, null);
-    send(myMessage);
-  }
-
-  /* 38 up arrow, 87  W key */
-  if ((keys[40] || keys[83]) && paddle.posY < 700) {
-    console.log(paddle.posY);
-    paddle.posY += paddle.speed;
-
-    var myMessage = new Message(paddle.posY, null, null);
-    send(myMessage);
+    send(new Message(paddle.posY));
   }
 }
 
