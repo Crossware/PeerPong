@@ -3,17 +3,17 @@
  */
 
 export class Paddle {
-  canvas;
-  width = 10;
-  height = 100;
-  initialPosX;
-  initialPosY;
-  _posX;
-  _posY;
-  _speed;
-  ctx;
+  private canvas: HTMLCanvasElement;
+  private width: number = 10;
+  private height: number = 100;
+  private initialPosX: number;
+  private initialPosY: number;
+  private _posX: number;
+  private _posY: number;
+  private _speed: number;
+  private ctx: CanvasRenderingContext2D;
 
-  constructor(canvas, posX, posY, speed) {
+  constructor(canvas: HTMLCanvasElement, posX: number, posY: number, speed: number) {
     this.canvas = canvas;
     this.initialPosX = posX;
     this.initialPosY = posY;
@@ -23,34 +23,31 @@ export class Paddle {
     this.ctx = canvas.getContext('2d');
   }
 
-  get posX() {
+  public get posX() {
     return this._posX;
   }
 
-  get posY() {
+  public get posY() {
     return this._posY;
   }
 
-  set posX(posX) {
+  public set posX(posX: number) {
     this._posX = posX;
   }
 
-  set posY(posY) {
+  public set posY(posY: number) {
     this._posY = posY;
   }
 
-  get speed() {
+  public get speed() {
     return this._speed;
   }
 
-  /**
-   * @param {any} speed
-   */
-  set speed(speed) {
+  public set speed(speed: number) {
     this._speed = speed;
   }
 
-  draw() {
+  public draw() {
     this.ctx.beginPath();
     this.ctx.fillStyle = '#eeeeee';
     this.ctx.fillRect(this.posX, this.posY, this.width, this.height);
@@ -58,7 +55,7 @@ export class Paddle {
     this.ctx.closePath();
   }
 
-  reset() {
+  public reset() {
     this._posX = this.initialPosX;
     this._posY = this.initialPosY;
   }
