@@ -56,7 +56,6 @@ let senderConnection;
 init();
 
 function drawDivider() {
-  var i;
   var posX = 595;
   var posY = 5;
   var width = 10;
@@ -74,7 +73,7 @@ function drawDivider() {
   ctx.stroke();
   ctx.closePath();
 
-  for (i = 0; i < 35; i++) {
+  for (let i = 0; i < 35; i++) {
     ctx.beginPath();
     ctx.fillStyle = '#393e46';
     ctx.fillRect(posX, posY + 15, width, height);
@@ -162,21 +161,21 @@ function send(message) {
   senderConnection.send(message);
 }
 
-function getEnemyId() {
-  const url = window.location.href;
-  const Id = url.split('?userId=')[1];
-  var enemyIdInput: any = document.getElementById('enemyIdInput');
-  var enemyId = enemyIdInput.value;
+function getEnemyId(): string {
+  const url: string = window.location.href;
+  const id: string = url.split('?userId=')[1];
+  var enemyIdInput: HTMLInputElement = getInputElementById('enemyIdInput');
+  var enemyId: string = enemyIdInput.value;
 
-  if (enemyId != null || enemyId != undefined) {
+  if (enemyId) {
     return enemyId;
-  } else if (enemyIdInput) {
-    console.log('Enemy Id from input: ' + enemyId);
-    return enemyIdInput;
-  } else {
-    console.log('Enemy Id from header: ' + Id);
-    return Id;
   }
+  //  else if (enemyIdInput) {
+  //   console.log('Enemy Id from input: ' + enemyId);
+  //   return enemyIdInput;
+  // }
+  console.log('Enemy Id from header: ' + id);
+  return id;
 }
 
 function getMyId() {
@@ -190,8 +189,12 @@ function getMyId() {
   return result;
 }
 
+function getInputElementById(id: string): HTMLInputElement {
+  return document.getElementById(id) as HTMLInputElement;
+}
+
 function sendChat() {
-  var inputField: any = document.getElementById('textInput');
+  var inputField: HTMLInputElement = getInputElementById('textInput');
   var playerId = getEnemyId();
   console.log(playerId);
   console.log(inputField.value);
@@ -200,7 +203,7 @@ function sendChat() {
 }
 
 function populateEnemyId() {
-  var enemyIdInput: any = document.getElementById('enemyIdInput');
+  var enemyIdInput: HTMLInputElement = getInputElementById('enemyIdInput');
   var enemyIdFromHeader = getEnemyId();
   enemyId = enemyIdFromHeader;
   if (enemyId) {
@@ -232,8 +235,8 @@ function updateEnemyPaddlePosition(message) {
 
 function updateEnemyBallPosition(message) {
   if (!iAmHost) {
-    myBall.setPosX(message.ballPosX);
-    myBall.setPosY(message.ballPosY);
+    myBall.posX = message.ballPosX;
+    myBall.posY = message.ballPosY;
   }
 }
 
