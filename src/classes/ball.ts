@@ -3,8 +3,8 @@
  */
 
 export default class Ball {
-  private posX: number;
-  private posY: number;
+  public posX: number;
+  public posY: number;
   private velocityX: number = 1;
   private velocityY: number = 1;
   private radius: number = 5;
@@ -28,14 +28,6 @@ export default class Ball {
     this.ctx.arc(this.posX, this.posY, this.radius, 0, Math.PI * 2);
     this.ctx.stroke();
     this.ctx.closePath();
-  }
-
-  public setPosX(posX: number): void {
-    this.posX = posX;
-  }
-
-  public setPosY(posY: number): void {
-    this.posY = posY;
   }
 
   public getDiameter(): number {
