@@ -29,8 +29,7 @@ const keys = [];
 
 var leftPaddle = new Paddle(canvas, 10, 350, 10);
 var rightPaddle = new Paddle(canvas, 1180, 350, 10);
-
-var myBall = new Ball(canvas, 600, 400, 5);
+var myBall = new Ball(canvas, 600, 400, speed);
 var myPaddle;
 var enemyPaddle;
 
@@ -198,7 +197,7 @@ function sendChat() {
   var playerId = getEnemyId();
   console.log(playerId);
   console.log(inputField.value);
-  var myMessage = new Message(null, null, inputField.value);
+  var myMessage = new Message(null, null, null, inputField.value);
   send(myMessage);
 }
 
@@ -369,6 +368,7 @@ function resetBall(ball) {
   ball.posY = canvasHeight / 2;
   ball.velocityX = 1;
   ball.velocityY = 1;
+  ball.speed = ball.initialSpeed;
 }
 
 function init() {
