@@ -2,11 +2,11 @@
  *  Stuff
  */
 
-import { Message } from './message.js';
-import { Paddle } from './paddle.js';
-import { Ball } from './ball.js';
-import { Score } from './score.js';
-
+import { Message } from './message';
+import { Paddle } from './paddle';
+import { Ball } from './ball';
+import { Score } from './score';
+import Peer from 'peerjs';
 window.addEventListener('keydown', (e) => {
   keys[e.keyCode] = true;
 });
@@ -20,7 +20,7 @@ document.getElementById('myId').addEventListener('click', getMyId);
 document.getElementById('sendMessage').addEventListener('click', sendChat);
 document.getElementById('challengeUser').addEventListener('click', challengeUser);
 
-var canvas = document.getElementById('myCanvas');
+var canvas: any = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 const speed = 5;
 const keys = [];
@@ -167,7 +167,8 @@ function send(message) {
 function getEnemyId() {
   const url = window.location.href;
   const Id = url.split('?userId=')[1];
-  var enemyIdInput = document.getElementById('enemyIdInput').value;
+  var enemyIdInput: any = document.getElementById('enemyIdInput');
+  var enemyId = enemyIdInput.value;
 
   if (enemyId != null || enemyId != undefined) {
     return enemyId;
@@ -192,7 +193,7 @@ function getMyId() {
 }
 
 function sendChat() {
-  var inputField = document.getElementById('textInput');
+  var inputField: any = document.getElementById('textInput');
   var playerId = getEnemyId();
   console.log(playerId);
   console.log(inputField.value);
@@ -201,7 +202,7 @@ function sendChat() {
 }
 
 function populateEnemyId() {
-  var enemyIdInput = document.getElementById('enemyIdInput');
+  var enemyIdInput: any = document.getElementById('enemyIdInput');
   var enemyIdFromHeader = getEnemyId();
   enemyId = enemyIdFromHeader;
   if (enemyId) {
