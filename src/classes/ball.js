@@ -9,6 +9,7 @@ export class Ball {
   velocityY = 1;
   radius = 5;
   diameter = 2 * this.radius;
+  initialSpeed;
   speed;
   canvas;
   ctx;
@@ -17,7 +18,8 @@ export class Ball {
     this.canvas = canvas;
     this.posX = posX;
     this.posY = posY;
-    this.speed = speed;
+    this.initialSpeed = speed;
+    this.speed = this.initialSpeed;
     this.ctx = canvas.getContext('2d');
   }
 
