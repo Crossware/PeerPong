@@ -1,4 +1,4 @@
-import { Ball } from '../classes/ball';
+import Ball from '../classes/Ball';
 
 let canvas;
 let ctx;

@@ -2,7 +2,7 @@
  *  Ball Object
  */
 
-export class Ball {
+export default class Ball {
   private posX: number;
   private posY: number;
   private velocityX: number = 1;

@@ -2,10 +2,10 @@
  *  Stuff
  */
 
-import { Message } from './message';
-import { Paddle } from './paddle';
-import { Ball } from './ball';
-import { Score } from './score';
+import Message from './Message';
+import Paddle from './Paddle';
+import Ball from './Ball';
+import Score from './Score';
 import Peer from 'peerjs';
 window.addEventListener('keydown', (e) => {
   keys[e.keyCode] = true;

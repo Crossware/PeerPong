@@ -2,7 +2,7 @@
  *  Used to send messages between peers.
  */
 
-export class Message {
+export default class Message {
   paddlePosY;
   ballPosX;
   ballPosY;

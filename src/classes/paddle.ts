@@ -2,7 +2,7 @@
  *  Paddle Object
  */
 
-export class Paddle {
+export default class Paddle {
   private canvas: HTMLCanvasElement;
   private width: number = 10;
   private height: number = 100;

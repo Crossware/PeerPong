@@ -2,7 +2,7 @@
  *  Score Object
  */
 
-export class Score {
+export default class Score {
   private posX: number;
   private posY: number;
   private size: number = 10;
