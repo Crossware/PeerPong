@@ -13,7 +13,7 @@ describe('Paddle', () => {
     var myPaddle = new Paddle(canvas, 10, 10, 0);
     myPaddle.draw();
 
-    expect(ctx.fillStyle).toBe('#eee');
+    expect(ctx.fillStyle).toBe('#eeeeee');
     expect(ctx.fillRect).toHaveBeenCalledTimes(1);
     expect(ctx.fillRect).toHaveBeenCalledWith(10, 10, 10, 100);
     expect(ctx.stroke).toHaveBeenCalledTimes(1);

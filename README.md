@@ -7,7 +7,7 @@
 I had randomly sumbled upon Peerjs while looking for ideas for javascript projects and was impressed by it's power and simplicity so I tried to come up with a fun implementation for it so PeerPong was born!
 
 <b>This repo uses <a href="https://www.netlify.com/" alt="issues">Netlify</a> for hosting with a merge action on master.</b>
- 
+  
 ## Contributing 
 Contribuition is more than welcome and hopefully easy to do:
 
@@ -20,6 +20,9 @@ Alternatively using the GitHub CLI run the following command
 Once you've got all the code run ``` npm i ``` into your terminal to install all the package dependencies if npm isn't installed onto your machine you can get it from <a href="https://www.npmjs.com/get-npm" alt="npm website">here.</a>
 
 <b>Keep an eye out the <a href="https://github.com/Crossware/PeerPong/issues" alt="issues">issues</a> tab for new items that can be worked on!</b>
+
+
+For easy development <a href="https://code.visualstudio.com/" alt="Visual Studio Code">Visual Studio Code</a> is recommended and the repo has a recommended extensions list which can help with development/testing and offline debugging, if you have any extension recommendations feel free to add new ones.
 
 ### Gameplay instructions
 So you wanna play the game huh, well you're in the right place, since it's a simple pong game at it's core to play simply use:
@@ -34,6 +37,7 @@ And that about covers it now, head over to https://peerpong.netlify.app/ to star
 
 
 ## External resources used: 
+#### Awesome free hosting with merge deploys from repo to website using <a href="https://www.netlify.com/" alt="issues">Netlify</a>
 #### Icons by 
 <h1><a href="https://github.com/FortAwesome/Font-Awesome"><img src="https://img.fortawesome.com/349cfdf6/logo-fa-free.svg" alt="Font Awesome 5 Free" width="50%"></a></h1>
 
