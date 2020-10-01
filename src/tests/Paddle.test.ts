@@ -1,11 +1,15 @@
-import { Paddle } from '../classes/paddle';
+import Paddle from '../classes/Paddle';
 
-let canvas;
-let ctx;
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
+const mockFillRectFunction = jest.fn((x: number, y: number, w: number, h: number) => {});
+const mockStrokeFunction = jest.fn();
 
 beforeEach(() => {
   canvas = document.createElement('canvas');
   ctx = canvas.getContext('2d');
+  ctx.fillRect = mockFillRectFunction;
+  ctx.stroke = mockStrokeFunction;
 });
 
 describe('Paddle', () => {

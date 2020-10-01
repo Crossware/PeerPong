@@ -1,11 +1,24 @@
-import { Ball } from '../classes/ball';
+import Ball from '../classes/Ball';
 
-let canvas;
-let ctx;
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
+const mockArcFunction = jest.fn(
+  (
+    x: number,
+    y: number,
+    radius: number,
+    startAngle: number,
+    endAngle: number,
+    anticlockwise?: boolean
+  ) => {}
+);
+const mockStrokeFunction = jest.fn();
 
 beforeEach(() => {
   canvas = document.createElement('canvas');
   ctx = canvas.getContext('2d');
+  ctx.arc = mockArcFunction;
+  ctx.stroke = mockStrokeFunction;
 });
 
 describe('Ball', () => {

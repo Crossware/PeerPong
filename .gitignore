@@ -3,4 +3,8 @@
 
 node_modules/
 
+# Transpiled Files
+dist/
 
+# Coverate Reports
+coverage/

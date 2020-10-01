@@ -2,10 +2,11 @@
  *  Stuff
  */
 
-import { Message } from './message.js';
-import { Paddle } from './paddle.js';
-import { Ball } from './ball.js';
-import { Score } from './score.js';
+import Message from './classes/Message';
+import Paddle from './classes/Paddle';
+import Ball from './classes/Ball';
+import Score from './classes/Score';
+import Peer from 'peerjs';
 
 window.addEventListener('keydown', (e) => {
   keys[e.keyCode] = true;
@@ -20,18 +21,20 @@ document.getElementById('myId').addEventListener('click', getMyId);
 document.getElementById('sendMessage').addEventListener('click', sendChat);
 document.getElementById('challengeUser').addEventListener('click', challengeUser);
 
-var canvas = document.getElementById('myCanvas');
+var canvas: any = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
+
 const speed = 5;
 const keys = [];
+
 var leftPaddle = new Paddle(canvas, 10, 350, 10);
 var rightPaddle = new Paddle(canvas, 1180, 350, 10);
 var myBall = new Ball(canvas, 600, 400, speed);
 var myPaddle;
 var enemyPaddle;
 
-var leftScore = new Score(canvas, 250, 150, 50, 0);
-var rightScore = new Score(canvas, 850, 150, 50, 0);
+var leftScore = new Score(canvas, 250, 150, 50, '0');
+var rightScore = new Score(canvas, 850, 150, 50, '0');
 var myScore;
 var enemyScore;
 
@@ -52,7 +55,6 @@ let senderConnection;
 init();
 
 function drawDivider() {
-  var i;
   var posX = 595;
   var posY = 5;
   var width = 10;
@@ -70,7 +72,7 @@ function drawDivider() {
   ctx.stroke();
   ctx.closePath();
 
-  for (i = 0; i < 35; i++) {
+  for (let i = 0; i < 35; i++) {
     ctx.beginPath();
     ctx.fillStyle = '#393e46';
     ctx.fillRect(posX, posY + 15, width, height);
@@ -96,23 +98,17 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-function updateHostPaddle(paddle) {
-  /* 38 up arrow, 87  W key */
-  if ((keys[38] || keys[87]) && paddle.posY > 0) {
+function updateHostPaddle(paddle: Paddle) {
+  const upKeyPressed = (keys[38] || keys[87]) && paddle.posY > 0;
+  const downKeyPressed = (keys[40] || keys[83]) && paddle.posY < 700;
+  const keyPressed = upKeyPressed || downKeyPressed;
+
+  if (upKeyPressed) paddle.moveUp();
+  if (downKeyPressed) paddle.moveDown();
+
+  if (keyPressed) {
     console.log(paddle.posY);
-    paddle.posY -= paddle.speed;
-
-    var myMessage = new Message(paddle.posY, null, null);
-    send(myMessage);
-  }
-
-  /* 38 up arrow, 87  W key */
-  if ((keys[40] || keys[83]) && paddle.posY < 700) {
-    console.log(paddle.posY);
-    paddle.posY += paddle.speed;
-
-    var myMessage = new Message(paddle.posY, null, null);
-    send(myMessage);
+    send(new Message(paddle.posY));
   }
 }
 
@@ -164,20 +160,21 @@ function send(message) {
   senderConnection.send(message);
 }
 
-function getEnemyId() {
-  const url = window.location.href;
-  const Id = url.split('?userId=')[1];
-  var enemyIdInput = document.getElementById('enemyIdInput').value;
+function getEnemyId(): string {
+  const url: string = window.location.href;
+  const id: string = url.split('?userId=')[1];
+  var enemyIdInput: HTMLInputElement = getInputElementById('enemyIdInput');
+  var enemyId: string = enemyIdInput.value;
 
-  if (enemyId != null || enemyId != undefined) {
+  if (enemyId) {
     return enemyId;
-  } else if (enemyIdInput) {
-    console.log('Enemy Id from input: ' + enemyId);
-    return enemyIdInput;
-  } else {
-    console.log('Enemy Id from header: ' + Id);
-    return Id;
   }
+  //  else if (enemyIdInput) {
+  //   console.log('Enemy Id from input: ' + enemyId);
+  //   return enemyIdInput;
+  // }
+  console.log('Enemy Id from header: ' + id);
+  return id;
 }
 
 function getMyId() {
@@ -191,8 +188,12 @@ function getMyId() {
   return result;
 }
 
+function getInputElementById(id: string): HTMLInputElement {
+  return document.getElementById(id) as HTMLInputElement;
+}
+
 function sendChat() {
-  var inputField = document.getElementById('textInput');
+  var inputField: HTMLInputElement = getInputElementById('textInput');
   var playerId = getEnemyId();
   console.log(playerId);
   console.log(inputField.value);
@@ -201,7 +202,7 @@ function sendChat() {
 }
 
 function populateEnemyId() {
-  var enemyIdInput = document.getElementById('enemyIdInput');
+  var enemyIdInput: HTMLInputElement = getInputElementById('enemyIdInput');
   var enemyIdFromHeader = getEnemyId();
   enemyId = enemyIdFromHeader;
   if (enemyId) {
@@ -298,7 +299,7 @@ function updateHostBallPosition(ball) {
     resetHostPaddles();
     resetBall(ball);
     return;
-  } else if (newBallX + myBall.diameter > canvasWidth - 1) {
+  } else if (newBallX + myBall.getDiameter() > canvasWidth - 1) {
     updateHostScore();
     resetHostPaddles();
     resetBall(ball);
