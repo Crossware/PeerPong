@@ -41,7 +41,3 @@ export default class Message {
     };
   }
 }
-
-/*
-Uncaught Error: Type "function(e,t,r,n,i,o,a){void 0===e&&(e=null),void 0===t&&(t=null),void 0===r&&(r=null),void 0===n&&(n=null),void 0===i&&(i=null),void 0===o&&(o=null),void 0===a&&(a=null),this.paddlePosY=e,this.ballPosX=t,this.ballPosY=r,this.chat=n,this.paddleReset=i,this.hostScore=o,this.enemyScore=a}" not yet supported
- */
