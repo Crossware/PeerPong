@@ -47,6 +47,7 @@ var canvasHeight = 800;
 const myself = new Peer(null, {
   debug: 2,
 });
+
 let myId;
 let enemyId;
 let connection;
@@ -153,11 +154,11 @@ function listen() {
   });
 }
 
-function send(message) {
+function send(message: Message): void {
   challengeUser();
   console.log('Sending: ');
   console.log(message);
-  senderConnection.send(message);
+  senderConnection.send(message.getMessageObject());
 }
 
 function getEnemyId(): string {
