@@ -9,11 +9,11 @@ import Score from './classes/Score';
 import Peer from 'peerjs';
 
 window.addEventListener('keydown', (e) => {
-  keys[e.keyCode] = true;
+  keys[e.key] = true;
 });
 
 window.addEventListener('keyup', (e) => {
-  delete keys[e.keyCode];
+  delete keys[e.key];
 });
 
 document.getElementById('enemyId').addEventListener('click', getEnemyId);
