@@ -112,17 +112,14 @@ function updateHostPaddle(paddle: Paddle) {
 }
 
 myself.on('open', function (id) {
-  console.log('on open My peer Id is: ' + id);
+  console.log('My peer Id is: ' + id);
   myId = id;
 });
 
 myself.on('connection', (playerConnection) => {
-  console.log('on connection: ' + playerConnection);
-  
   connection = playerConnection;
-
   if(connection.open) {
-    console.log('Successfully connected to: ' + connection.peer);
+    console.log('successfully connected to peer ' + connection.peer);
     myScore = rightScore;
     enemyScore = leftScore;
     myPaddle = rightPaddle;
@@ -131,12 +128,11 @@ myself.on('connection', (playerConnection) => {
     enemyId = connection.peer;
     listen();
   } else {
-    alert('invalid player connection');
+    console.log('invalid player connection');
   }
 });
 
 function listen() {
-  console.log('listen');
   connection.on('open', () => {
     connection.on('data', (message) => {
       var chatMessage = message.chat;
@@ -151,7 +147,6 @@ function listen() {
   });
 
   connection.on('close', () => {
-    console.log('Connection Lost');
     alert('connection was closed');
     connection = null;
   });
@@ -182,14 +177,12 @@ function getEnemyId(): string {
 }
 
 function getMyId() {
-  console.log('getting id');
   var input = document.createElement('input');
   input.setAttribute('value', myId);
   document.body.appendChild(input);
   input.select();
   var result = document.execCommand('copy');
   document.body.removeChild(input);
-  console.log(myId);
   return result;
 }
 
@@ -201,7 +194,7 @@ function sendChat() {
   var inputField: HTMLInputElement = getInputElementById('textInput');
   console.log(inputField.value);
   if(inputField.value == null || inputField.value == '') {
-    alert('cannot send message empty message!');
+    alert('cannot send an empty message!');
   } else {
     var myMessage = new Message(null, null, null, inputField.value);
     send(myMessage);
@@ -218,17 +211,14 @@ function populateEnemyId() {
 }
 
 function challengeUser() {
-  //TODO: Add error message if no user Id specified and success message when connected successfully
-  var enemyId = getEnemyId();
-
   if (connection == null || connection == undefined) {
-    console.log('sender connection is null, attempting to connect to ' + enemyId);
+    var enemyId = getEnemyId();
     if(enemyId == null || enemyId == undefined) {
-      alert('enemy id is empty!');
+      alert('enemy id is empty');
     } else {
       connection = myself.connect(enemyId, { reliable: true });
       if (connection.open) {
-        alert('successfully connected to peer! ' + connection.peer);
+        alert('successfully connected to peer ' + connection.peer);
       } else {
         alert('failed to connect to ' + enemyId);
       }
