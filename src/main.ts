@@ -99,8 +99,8 @@ function animate() {
 }
 
 function updateHostPaddle(paddle: Paddle) {
-  const upKeyPressed = (keys[38] || keys[87]) && paddle.posY > 0;
-  const downKeyPressed = (keys[40] || keys[83]) && paddle.posY < 700;
+  const upKeyPressed = (keys["KeyW"] || keys["ArrowUp"]) && paddle.posY > 0;
+  const downKeyPressed = (keys["KeyS"] || keys["ArrowDown"]) && paddle.posY < 700;
   const keyPressed = upKeyPressed || downKeyPressed;
 
   if (upKeyPressed) paddle.moveUp();
