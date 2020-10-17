@@ -118,12 +118,13 @@ myself.on('open', function (id) {
 
 myself.on('connection', (playerConnection) => {
   connection = playerConnection;
-  if(connection.open) {
+  if(connection != null) {
     console.log('successfully connected to peer ' + connection.peer);
     myScore = rightScore;
     enemyScore = leftScore;
     myPaddle = rightPaddle;
     enemyPaddle = leftPaddle;
+    iAmHost = false;
     startPlaying = true;
     enemyId = connection.peer;
     listen();
@@ -153,8 +154,7 @@ function listen() {
 }
 
 function send(message) {
-  if(connection.open) {
-    console.log('Sending: ' + message);
+  if(connection != null) {
     connection.send(message);
   }
 }
@@ -211,7 +211,6 @@ function populateEnemyId() {
 }
 
 function challengeUser() {
-  
   if (connection == null || connection == undefined) {
     var enemyId = getEnemyId();
     if(enemyId == null || enemyId == undefined) {
@@ -219,10 +218,16 @@ function challengeUser() {
     } else {
       var retries = 0;
       var isSuccess = false;
-      while(retries < 2 || isSuccess) {
+      while(retries < 3 && !isSuccess) {
         connection = myself.connect(enemyId, { reliable: true });
-        if (connection.open) {
+        if (connection != null) {
           alert('successfully connected to peer ' + connection.peer);
+          myScore = leftScore;
+          enemyScore = rightScore;
+          myPaddle = leftPaddle;
+          enemyPaddle = rightPaddle;
+          iAmHost = true;
+          startPlaying = true;
           isSuccess = true;
         } else {
           retries++;
@@ -337,7 +342,6 @@ function calculateAngle(paddle, ball) {
 
 function updateHostScore() {
   myScore.text++;
-
   send(new Message(null, null, null, null, null, myScore.text));
 }
 
@@ -353,7 +357,6 @@ function updateEnemyScoreFromMessage(message) {
 
 function updateEnemyScore() {
   enemyScore.text++;
-
   send(new Message(null, null, null, null, null, null, enemyScore.text));
 }
 
