@@ -196,8 +196,7 @@ function sendChat() {
   if(inputField.value == null || inputField.value == '') {
     alert('cannot send an empty message!');
   } else {
-    var myMessage = new Message(null, null, null, inputField.value);
-    send(myMessage);
+    send(new Message(null, null, null, inputField.value));
   }
 }
 
@@ -320,8 +319,7 @@ function updateHostBallPosition(ball) {
     return;
   }
 
-  var myMessage = new Message(null, ball.posX, ball.posY, null);
-  send(myMessage);
+  send(new Message(null, ball.posX, ball.posY, null));
   ball.posX = newBallX;
   ball.posY = newBallY;
 }
@@ -363,9 +361,7 @@ function updateEnemyScore() {
 function resetHostPaddles() {
   myPaddle.reset();
   enemyPaddle.reset();
-
-  var myMessage = new Message(null, null, null, null, true);
-  send(myMessage);
+  send(new Message(null, null, null, null, true));
 }
 
 function resetEnemyPaddles(message) {
