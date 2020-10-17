@@ -211,16 +211,20 @@ function populateEnemyId() {
 }
 
 function challengeUser() {
+  var retries = 0;
   if (connection == null || connection == undefined) {
     var enemyId = getEnemyId();
     if(enemyId == null || enemyId == undefined) {
       alert('enemy id is empty');
     } else {
-      connection = myself.connect(enemyId, { reliable: true });
-      if (connection.open) {
-        alert('successfully connected to peer ' + connection.peer);
-      } else {
-        alert('failed to connect to ' + enemyId);
+      while(retries < 2) {
+        connection = myself.connect(enemyId, { reliable: true });
+        if (connection.open) {
+          alert('successfully connected to peer ' + connection.peer);
+        } else {
+          alert('failed to connect to ' + enemyId);
+        }
+        retries++;
       }
     }
   }
