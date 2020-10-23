@@ -19,3 +19,5 @@ jobs:
         with:
           prettier_options: --write **/*.{ts,js,md,css}
           only_changed: True
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
