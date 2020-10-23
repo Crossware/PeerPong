@@ -47,6 +47,7 @@ var canvasHeight = 800;
 const myself = new Peer(null, {
   debug: 2,
 });
+
 let myId;
 let enemyId;
 let connection;
@@ -153,28 +154,27 @@ function listen() {
   });
 }
 
-function send(message) {
+function send(message: Message): void {
   challengeUser();
   console.log('Sending: ');
   console.log(message);
-  senderConnection.send(message);
+  senderConnection.send(message.getMessageObject());
 }
 
 function getEnemyId(): string {
   const url: string = window.location.href;
   const id: string = url.split('?userId=')[1];
-  var enemyIdInput: HTMLInputElement = getInputElementById('enemyIdInput');
-  var enemyId: string = enemyIdInput.value;
-
+  var enemyIdInput: string = getInputElementById('enemyIdInput').value;
   if (enemyId) {
+    console.log('Enemy Id from connection: ' + enemyId);
     return enemyId;
+  } else if (enemyIdInput) {
+    console.log('Enemy Id from input: ' + enemyIdInput);
+    return enemyIdInput;
+  } else {
+    console.log('Enemy Id from header: ' + id);
+    return id;
   }
-  //  else if (enemyIdInput) {
-  //   console.log('Enemy Id from input: ' + enemyId);
-  //   return enemyIdInput;
-  // }
-  console.log('Enemy Id from header: ' + id);
-  return id;
 }
 
 function getMyId() {

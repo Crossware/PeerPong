@@ -28,4 +28,16 @@ export default class Message {
     this.hostScore = hostScore;
     this.enemyScore = enemyScore;
   }
+
+  public getMessageObject(): any {
+    return {
+      paddlePosY: this.paddlePosY,
+      ballPosX: this.ballPosX,
+      ballPosY: this.ballPosY,
+      chat: this.chat,
+      paddleReset: this.paddleReset,
+      hostScore: this.hostScore,
+      enemyScore: this.enemyScore,
+    };
+  }
 }
