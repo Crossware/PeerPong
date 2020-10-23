@@ -109,7 +109,7 @@ function updateHostPaddle(paddle: Paddle) {
 
   if (keyPressed) {
     console.log(paddle.posY);
-    send(new Message(paddle.posY));
+    send(new Message(paddle.posY, null, null));
   }
 }
 
@@ -137,13 +137,13 @@ myself.on('connection', (playerConnection) => {
 function listen() {
   connection.on('open', () => {
     connection.on('data', (message) => {
+      console.log('Data received: ');
+      console.log(message);
       var chatMessage = message.chat;
       updateEnemyPaddlePosition(message);
       updateEnemyBallPosition(message);
       resetEnemyPaddles(message);
       updateEnemyScoreFromMessage(message);
-      console.log(message);
-      console.log('Data received: ');
       connection.send('Connection Established');
     });
   });
@@ -307,7 +307,7 @@ function updateHostBallPosition(ball) {
     return;
   }
 
-  var myMessage = new Message(null, ball.posX, ball.posY, null);
+  var myMessage = new Message(myPaddle.posY, ball.posX, ball.posY);
   send(myMessage);
   ball.posX = newBallX;
   ball.posY = newBallY;
