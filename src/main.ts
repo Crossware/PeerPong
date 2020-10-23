@@ -223,7 +223,6 @@ function challengeUser() {
       while(retries < 3 && !isSuccess) {
         connection = myself.connect(enemyId, { reliable: true });
         if (connection != null) {
-          alert('successfully connected to peer ' + connection.peer);
           myScore = leftScore;
           enemyScore = rightScore;
           myPaddle = leftPaddle;
