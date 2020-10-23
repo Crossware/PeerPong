@@ -1,0 +1,11 @@
+#Ignore node modules
+node_modules/
+
+#Ignore Transpiled Files
+dist/
+
+#Ignore Coverate Reports
+coverage/
+
+#Ignore all HTML files:
+*.html
