@@ -9,11 +9,11 @@ import Score from './classes/Score';
 import Peer from 'peerjs';
 
 window.addEventListener('keydown', (e) => {
-  keys[e.keyCode] = true;
+  keys[e.code] = true;
 });
 
 window.addEventListener('keyup', (e) => {
-  delete keys[e.keyCode];
+  delete keys[e.code];
 });
 
 document.getElementById('enemyId').addEventListener('click', getEnemyId);
@@ -45,8 +45,12 @@ var canvasWidth = 1200;
 var canvasHeight = 800;
 
 const myself = new Peer(null, {
-  debug: 2,
+  secure: true,
+  host: 'peerpong-server.herokuapp.com',
+  port: 443,
+  debug: 1,
 });
+
 let myId;
 let enemyId;
 let connection;
@@ -98,8 +102,8 @@ function animate() {
 }
 
 function updateHostPaddle(paddle: Paddle) {
-  const upKeyPressed = (keys[38] || keys[87]) && paddle.posY > 0;
-  const downKeyPressed = (keys[40] || keys[83]) && paddle.posY < 700;
+  const upKeyPressed = (keys["KeyW"] || keys["ArrowUp"]) && paddle.posY > 0;
+  const downKeyPressed = (keys["KeyS"] || keys["ArrowDown"]) && paddle.posY < 700;
   const keyPressed = upKeyPressed || downKeyPressed;
 
   if (upKeyPressed) paddle.moveUp();
@@ -162,18 +166,17 @@ function send(message) {
 function getEnemyId(): string {
   const url: string = window.location.href;
   const id: string = url.split('?userId=')[1];
-  var enemyIdInput: HTMLInputElement = getInputElementById('enemyIdInput');
-  var enemyId: string = enemyIdInput.value;
-
+  var enemyIdInput: string = getInputElementById('enemyIdInput').value;
   if (enemyId) {
+    console.log('Enemy Id from connection: ' + enemyId);
     return enemyId;
+  } else if (enemyIdInput) {
+    console.log('Enemy Id from input: ' + enemyIdInput);
+    return enemyIdInput;
+  } else {
+    console.log('Enemy Id from header: ' + id);
+    return id;
   }
-  //  else if (enemyIdInput) {
-  //   console.log('Enemy Id from input: ' + enemyId);
-  //   return enemyIdInput;
-  // }
-  console.log('Enemy Id from header: ' + id);
-  return id;
 }
 
 function getMyId() {
