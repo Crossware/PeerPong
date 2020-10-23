@@ -1,6 +1,7 @@
 <h1><img src="https://github.com/Crossware/PeerPong/blob/develop/src/files/table-tennis-solid-bg.svg" alt="PeerPong" width="50"/> PeerPong</h1>
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/25db7d36-c1c3-4056-9271-a4d6e32fd2a5/deploy-status)](https://app.netlify.com/sites/peerpong/deploys)
+![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=PeerPong%20server&up_color=green&up_message=Online&url=https%3A%2F%2Fpeerpong-server.herokuapp.com%2F)
 
 <b>PeerPong is a peer 2 peer pong game developped using <a href="https://github.com/peers/peerjs" alt="Peerjs">Peerjs</a></b>
 
