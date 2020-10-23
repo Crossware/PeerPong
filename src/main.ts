@@ -157,9 +157,9 @@ function listen() {
   });
 }
 
-function send(message) {
+function send(message: Message): void {
   if(connection != null) {
-    connection.send(message);
+    connection.send(message.getMessageObject());
   }
 }
 
