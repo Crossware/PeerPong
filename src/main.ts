@@ -54,7 +54,6 @@ const myself = new Peer(null, {
 let myId;
 let enemyId;
 let connection;
-let senderConnection;
 
 init();
 
@@ -119,22 +118,23 @@ function updateHostPaddle(paddle: Paddle) {
 myself.on('open', function (id) {
   console.log('My peer Id is: ' + id);
   myId = id;
-  console.log(myId);
 });
 
 myself.on('connection', (playerConnection) => {
-  if (senderConnection == null || senderConnection == undefined) {
+  connection = playerConnection;
+  if(connection != null) {
+    console.log('successfully connected to peer ' + connection.peer);
     myScore = rightScore;
     enemyScore = leftScore;
     myPaddle = rightPaddle;
     enemyPaddle = leftPaddle;
+    iAmHost = false;
     startPlaying = true;
+    enemyId = connection.peer;
+    listen();
+  } else {
+    console.log('invalid player connection');
   }
-
-  connection = playerConnection;
-  console.log('Successfully connected to: ' + connection.peer);
-  enemyId = connection.peer;
-  listen();
 });
 
 function listen() {
@@ -152,16 +152,15 @@ function listen() {
   });
 
   connection.on('close', () => {
-    console.log('Connection Lost');
+    alert('connection was closed');
     connection = null;
   });
 }
 
 function send(message: Message): void {
-  challengeUser();
-  console.log('Sending: ');
-  console.log(message);
-  senderConnection.send(message.getMessageObject());
+  if(connection != null) {
+    connection.send(message.getMessageObject());
+  }
 }
 
 function getEnemyId(): string {
@@ -187,7 +186,6 @@ function getMyId() {
   input.select();
   var result = document.execCommand('copy');
   document.body.removeChild(input);
-  console.log(myId);
   return result;
 }
 
@@ -197,11 +195,12 @@ function getInputElementById(id: string): HTMLInputElement {
 
 function sendChat() {
   var inputField: HTMLInputElement = getInputElementById('textInput');
-  var playerId = getEnemyId();
-  console.log(playerId);
   console.log(inputField.value);
-  var myMessage = new Message(null, null, null, inputField.value);
-  send(myMessage);
+  if(inputField.value == null || inputField.value == '') {
+    alert('cannot send an empty message!');
+  } else {
+    send(new Message(null, null, null, inputField.value));
+  }
 }
 
 function populateEnemyId() {
@@ -214,17 +213,30 @@ function populateEnemyId() {
 }
 
 function challengeUser() {
-  //TODO: Add error message if no user Id specified and success message when connected successfully
-  var playerId = getEnemyId();
-  if (senderConnection == null || senderConnection == undefined) {
-    senderConnection = myself.connect(playerId, { reliable: true });
-    if (connection == null || connection == undefined) {
-      myScore = leftScore;
-      enemyScore = rightScore;
-      myPaddle = leftPaddle;
-      enemyPaddle = rightPaddle;
-      iAmHost = true;
-      startPlaying = true;
+  if (connection == null || connection == undefined) {
+    var enemyId = getEnemyId();
+    if(enemyId == null || enemyId == undefined) {
+      alert('enemy id is empty');
+    } else {
+      var retries = 0;
+      var isSuccess = false;
+      while(retries < 3 && !isSuccess) {
+        connection = myself.connect(enemyId, { reliable: true });
+        if (connection != null) {
+          myScore = leftScore;
+          enemyScore = rightScore;
+          myPaddle = leftPaddle;
+          enemyPaddle = rightPaddle;
+          iAmHost = true;
+          startPlaying = true;
+          isSuccess = true;
+        } else {
+          retries++;
+        }
+      }
+      if(!isSuccess) {
+        alert('failed to connect to ' + enemyId);
+      }
     }
   }
 }
@@ -309,8 +321,7 @@ function updateHostBallPosition(ball) {
     return;
   }
 
-  var myMessage = new Message(null, ball.posX, ball.posY, null);
-  send(myMessage);
+  send(new Message(null, ball.posX, ball.posY, null));
   ball.posX = newBallX;
   ball.posY = newBallY;
 }
@@ -331,7 +342,6 @@ function calculateAngle(paddle, ball) {
 
 function updateHostScore() {
   myScore.text++;
-
   send(new Message(null, null, null, null, null, myScore.text));
 }
 
@@ -347,16 +357,13 @@ function updateEnemyScoreFromMessage(message) {
 
 function updateEnemyScore() {
   enemyScore.text++;
-
   send(new Message(null, null, null, null, null, null, enemyScore.text));
 }
 
 function resetHostPaddles() {
   myPaddle.reset();
   enemyPaddle.reset();
-
-  var myMessage = new Message(null, null, null, null, true);
-  send(myMessage);
+  send(new Message(null, null, null, null, true));
 }
 
 function resetEnemyPaddles(message) {
