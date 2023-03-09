@@ -21,12 +21,6 @@
     "webpack": "^5.76.0",
     "webpack-cli": "^5.0.1"
   },
-  "jest": {
-    "verbose": true,
-    "setupFiles": [
-      "jest-canvas-mock"
-    ]
-  },
   "scripts": {
     "test": "jest",
     "launch": "npm run build && npm run open",
