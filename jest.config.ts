@@ -1,4 +1,6 @@
-module.exports = {
+import type {Config} from 'jest';
+
+const config: Config = {
   roots: ['<rootDir>/src'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
@@ -13,4 +15,11 @@ module.exports = {
     },
   },
   coverageReporters: ['json', 'lcov', 'text', 'clover'],
+  verbose: true,
+  setupFiles: [
+    "jest-canvas-mock"
+  ],
+  testEnvironment: "jsdom",
 };
+
+module.exports = config;
