@@ -46,7 +46,7 @@ var canvasHeight = 800;
 
 const myself = new Peer(null, {
   secure: true,
-  host: 'peerpong-server.herokuapp.com',
+  host: '0.peerjs.com',
   port: 443,
   debug: 1,
 });
